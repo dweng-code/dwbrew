@@ -112,8 +112,8 @@
                 ctx.fillStyle = "#716e6e";
                 var hqty = 10;
                 var hint = cHeight / hqty;
-                var sgint = (SG_Scale_Hi - SG_Scale_Lo) / hint;
-                var tempint = (Temp_Scale_Hi - Temp_Scale_Lo) / hint;
+                var sgint = (SG_Scale_Hi - SG_Scale_Lo) / hqty;
+                var tempint = (Temp_Scale_Hi - Temp_Scale_Lo) / hqty;
                 for (var i = 0; i < hqty; i++) {
                     if (i > 0) {
                         ctx.beginPath();
