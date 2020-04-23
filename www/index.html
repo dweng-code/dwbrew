@@ -124,10 +124,15 @@
 
                     //draw SG labels
                     ctx.fillText((SG_Scale_Lo + sgint * i).toFixed(3), 6, (cHeight + topY) - (i * hint));
-                    ctx.fillText(Temp_Scale_Lo + tempint * i, cWidth-30, (cHeight + topY) - (i * hint));
+                    ctx.fillText(Temp_Scale_Lo + tempint * i, cWidth-25, (cHeight + topY) - (i * hint));
                 }
+                ctx.strokeStyle = "red";
+                ctx.fillText("SG",6,topY+6);
+                ctx.strokeStyle = "blue";
+                ctx.fillText("Temp",cWidth-25,topY+6);
 
                 //draw vertical gridlines
+                ctx.strokeStyle = "#d1d1e0";
                 var nSamples = (c.width - 10) / (dataArray.length - 1);
                 var interval = parseInt(dataArray.length / 50) + 1;
                 for (var i = 0; i < dataArray.length - 1; i++) {
