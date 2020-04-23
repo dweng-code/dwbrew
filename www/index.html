@@ -101,7 +101,6 @@
 
                 ctx.strokeStyle = "#d1d1e0";
                 ctx.font = "10px Arial";
-                ctx.fillStyle = "#716e6e";
 
                 ctx.beginPath();
                 ctx.rect(topX, topY, cWidth, cHeight);
@@ -109,6 +108,7 @@
                 ctx.fill();
 
                 //draw horizontal gridlines
+                ctx.fillStyle = "#716e6e";
                 var hqty = 10;
                 var hint = cHeight / hqty;
                 var sgint = (SG_Scale_Hi - SG_Scale_Lo) / hint;
