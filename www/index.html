@@ -9,18 +9,20 @@
     <body class="w3-white" onload='init()'>
         <div class="w3-container">
             <div class="w3-bar w3-margin-right w3-light-blue">
-                <h1 class="w3-bar-item">David's Brewing System</h1>
+                <h2 class="w3-bar-item">David's Brewing System</h2>
             </div>
-            <div class="w3-card w3-large">
-                <h2>Temperature: </h2>
-                <h3 id='t1' class="w3-text-blue">##</h3>
-            </div>
-            <div class="w3-card w3-large">
-                <h2>SG: </h2>
-                <h3 id='l1' class="w3-text-red">##</h3>
+            <div class="w3-row w3-margin-bottom w3-margin-top">
+                <div class="w3-col m6 w3-card w3-padding w3-large w3-margin-right">
+                    <h2>Temperature: </h2>
+                    <h3 id='t1' class="w3-text-blue">##</h3>
+                </div>
+                <div class="w3-rest w3-card w3-padding w3-large">
+                    <h2>SG: </h2>
+                    <h3 id='l1' class="w3-text-red">##</h3>
+                </div>
             </div>
             <div class="w3-card">
-                <canvas id="trend" width="400" height="325" style="border:1px solide #000000">
+                <canvas id="trend" width="400" height="325" style="border:1px solide #000000"></canvas>
             </div>
         </div>
         <script>
@@ -32,6 +34,13 @@
             var c = document.getElementById("trend");
             var ctx = c.getContext("2d");
             var dataArray = [];
+            
+            window.addEventListener("resize",resizeTrend);
+            function resizeTrend() {
+                c.width = window.innerWidth - 35;
+                trendStatic();
+                trend();
+            }
 
             function init() {
                 c.width = window.innerWidth - 35;
@@ -59,13 +68,13 @@
                 };
                 xmlhttp.onerror = function () {
                     console.log("Connection to server failed");
-                }
+                };
                 xmlhttp.open("GET", "/cgi/index.py", true);
                 xmlhttp.send();
             }
 
             function readTrendData() {
-                console.log("reading trend data")
+                console.log("reading trend data");
                 trendStatic();
                 var xmlhttp = new XMLHttpRequest();
                 xmlhttp.onreadystatechange = function () {
@@ -87,7 +96,7 @@
                 };
                 xmlhttp.onerror = function () {
                     console.log("Connection to server failed");
-                }
+                };
                 xmlhttp.open("GET", "/cgi/trend.py", true);
                 xmlhttp.send();
             }
@@ -124,12 +133,12 @@
 
                     //draw SG labels
                     ctx.fillText((SG_Scale_Lo + sgint * i).toFixed(3), 6, (cHeight + topY) - (i * hint));
-                    ctx.fillText(Temp_Scale_Lo + tempint * i, cWidth-25, (cHeight + topY) - (i * hint));
+                    ctx.fillText(Temp_Scale_Lo + tempint * i, cWidth - 25, (cHeight + topY) - (i * hint));
                 }
                 ctx.fillStyle = "red";
-                ctx.fillText("SG",6,topY+6);
+                ctx.fillText("SG", 6, topY + 8);
                 ctx.fillStyle = "blue";
-                ctx.fillText("Temp",cWidth-25,topY+6);
+                ctx.fillText("Temp", cWidth - 25, topY + 8);
 
                 //draw vertical gridlines
                 ctx.fillStyle = "#716e6e";
@@ -191,7 +200,7 @@
 
                     prevTemp = temp;
                     prevSG = sg;
-                    await sleep(50);
+                    //await sleep(50);
 
                 }
             }
