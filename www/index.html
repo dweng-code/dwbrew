@@ -8,10 +8,10 @@
     </head>
     <body class="w3-white" onload='init()'>
         <div class="w3-container">
-            <div class="w3-bar w3-margin-right w3-light-blue">
+            <div id="header" class="w3-bar w3-margin-right w3-light-blue">
                 <h2 class="w3-bar-item">David's Brewing System</h2>
             </div>
-            <div class="w3-row w3-margin-bottom w3-margin-top">
+            <div id="instPanel" class="w3-row w3-margin-bottom w3-margin-top">
                 <div class="w3-col m6 w3-card w3-padding w3-large w3-margin-right">
                     <h2>Temperature: </h2>
                     <h3 id='t1' class="w3-text-blue">##</h3>
@@ -30,22 +30,26 @@
             var Temp_Scale_Lo = 18.0;
             var SG_Scale_Hi = 1.055;
             var SG_Scale_Lo = 1.005;
+            var topX = 5;
+            var topY = 5;
+            var bMargin = 20;
 
             var c = document.getElementById("trend");
             var ctx = c.getContext("2d");
             var dataArray = [];
-            
-            window.addEventListener("resize",resizeTrend);
-            function resizeTrend() {
+
+            window.addEventListener("resize", buildTrend);
+            function buildTrend() {
                 c.width = window.innerWidth - 35;
+                c.height = window.innerHeight - 250;
                 trendStatic();
                 trend();
             }
 
             function init() {
-                c.width = window.innerWidth - 35;
+                buildTrend();
                 readTrendData();
-                var readid = setInterval(read, 1000);
+                //var readid = setInterval(read, 1000);
             }
 
             function read() {
@@ -74,8 +78,6 @@
             }
 
             function readTrendData() {
-                console.log("reading trend data");
-                trendStatic();
                 var xmlhttp = new XMLHttpRequest();
                 xmlhttp.onreadystatechange = function () {
                     if (this.readyState === 4 && this.status === 200) {
@@ -84,8 +86,7 @@
                             for (var i = 0; i < data.length; i++) {
                                 dataArray.push(data[i]);
                             }
-                            trendStatic();
-                            trend();
+                            buildTrend();
                         } catch (err) {
                             console.log(this.responseText);
                             console.log(err);
@@ -103,10 +104,8 @@
 
             function trendStatic() {
 
-                var topX = 5;
-                var topY = 5;
                 var cWidth = c.width - 10;
-                var cHeight = 290;
+                var cHeight = c.height - topY - bMargin;
 
                 ctx.strokeStyle = "#d1d1e0";
                 ctx.font = "10px Arial";
@@ -142,7 +141,7 @@
 
                 //draw vertical gridlines
                 ctx.fillStyle = "#716e6e";
-                var nSamples = (c.width - 10) / (dataArray.length - 1);
+                var nSamples = cWidth / (dataArray.length - 1);
                 var interval = parseInt(dataArray.length / 50) + 1;
                 for (var i = 0; i < dataArray.length - 1; i++) {
                     // add time value to x-axis
@@ -151,17 +150,17 @@
                     // draw vertical line and the hour value
                     if (i % interval === 0) {
                         ctx.beginPath();
-                        ctx.moveTo(5 + nSamples * i, 5);
-                        ctx.lineTo(5 + nSamples * i, 295);
+                        ctx.moveTo(5 + nSamples * i, topY);
+                        ctx.lineTo(5 + nSamples * i, cHeight + topY);
                         ctx.stroke();
-                        ctx.fillText(tstamp, 5 + nSamples * i, 306);
+                        ctx.fillText(tstamp, 5 + nSamples * i, cHeight + topY + 10);
                     }
 
                     // draw the date at the midnight point
                     if (i === 0 || tstamp === '00') {
                         var d = dataArray[i].date;
                         var dstamp = d.substring(0, 4) + "/" + d.substring(4, 6) + "/" + d.substring(6, 8);
-                        ctx.fillText(dstamp, 5 + nSamples * i, 320);
+                        ctx.fillText(dstamp, 5 + nSamples * i, cHeight + topY + 20);
                     }
                 }
 
@@ -169,7 +168,14 @@
 
             async function trend() {
 
+                if (dataArray.length === 0) return;
 
+                document.getElementById('t1').innerHTML = dataArray[dataArray.length-1].temp.toFixed(2);
+                document.getElementById('l1').innerHTML = dataArray[dataArray.length-1].sg;
+                
+                if (dataArray.length <= 1) return;
+
+                var cHeight = c.height - topY - bMargin;
                 prevTemp = 0;
                 prevSG = 0;
 
@@ -187,15 +193,15 @@
                     x2 = x1 + xoffset;
 
                     ctx.beginPath();
-                    ctx.moveTo(x1, 295 * (1 - prevTemp));
-                    ctx.lineTo(x2, 295 * (1 - temp));
+                    ctx.moveTo(x1, (cHeight - topY) * (1 - prevTemp));
+                    ctx.lineTo(x2, (cHeight - topY) * (1 - temp));
                     ctx.strokeStyle = "blue";
                     ctx.stroke();
 
                     ctx.strokeStyle = "red";
                     ctx.beginPath();
-                    ctx.moveTo(x1, 295 * (1 - prevSG));
-                    ctx.lineTo(x2, 295 * (1 - sg));
+                    ctx.moveTo(x1, (cHeight - topY) * (1 - prevSG));
+                    ctx.lineTo(x2, (cHeight - topY) * (1 - sg));
                     ctx.stroke();
 
                     prevTemp = temp;
