@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>DWBrew Admin</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/css/w3css.css">
+    </head>
+    <body class="w3-white" onload="init()">
+        <div class="w3-bar w3-margin-right w3-light-blue">
+            <span class="w3-bar-item w3-left w3-xlarge">Dave's Brew Admin</span>
+            <button class="w3-button w3-bar-item w3-center" id='batch'>Start Batch</button>
+            <button class="w3-button w3-bar-item w3-right w3-small" onclick="window.location.href = 'index.html?date='+new Date().getTime()">View Batch</button>
+        </div>
+        <div class="w3-row w3-margin">
+            <div class="w3-col m2">
+                <span>Brew Name:</span>
+            </div>
+            <div class="w3-m5">
+                <div id="brewname" contenteditable="true">Batch Name</div>
+            </div>
+            <div class='w3-rest'></div>
+        </div>
+        
+        <script>
+            function init() {
+                
+            }
+        </script>
+    </body>
+</html>
