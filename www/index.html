@@ -7,29 +7,27 @@
         <link rel="stylesheet" href="/css/w3-theme-blue.css">
     </head>
     <body class="w3-white" onload='init()'>
-        <!--div class="w3-container"-->
-        <div id="header" class="w3-bar w3-margin-right w3-light-blue w3-xlarge">
+        <div class="w3-bar w3-margin-right w3-light-blue w3-xlarge">
             <span class="w3-bar-item w3-left">Dave's Brew:</span>
-            <span class="w3-bar-item">Today's Brew</span>
-            <button class="w3-button w3-bar-item w3-right w3-small">Admin</button>
+            <span id='brewname' class="w3-bar-item">Today's Brew</span>
+            <button class="w3-button w3-bar-item w3-right w3-small" onclick="window.location.href = 'admin.html?date='+new Date().getTime()">Admin</button>
         </div>
-        <div id="instPanel" class="w3-row w3-margin">
+        <div class="w3-row w3-margin">
             <div class="w3-col m6 w3-card w3-padding w3-large w3-margin-right">
                 <span>Temperature: </span>
                 <span id='t1' class="w3-text-blue">##</span>
             </div>
             <div class="w3-rest w3-card w3-padding w3-large">
                 <span>SG: </span>
-                <span id='l1' class="w3-text-red">##</span>
+                <span id='sg1' class="w3-text-red">##</span>
             </div>
         </div>
         <div class="w3-card w3-margin">
             <canvas id="trend" width="400" height="325" style="border:1px solide #000000"></canvas>
         </div>
-        <!--/div-->
         <script>
-            var Temp_Scale_Hi = 23.0;
-            var Temp_Scale_Lo = 18.0;
+            var Temp_Scale_Hi = 25.0;
+            var Temp_Scale_Lo = 15.0;
             var SG_Scale_Hi = 1.055;
             var SG_Scale_Lo = 1.005;
             var topX = 40;
@@ -51,7 +49,6 @@
             function init() {
                 buildTrend();
                 readTrendData();
-                //var readid = setInterval(read, 1000);
             }
 
             function readTrendData() {
@@ -149,7 +146,7 @@
 
                 var ind = dataArray.length - 1;
                 document.getElementById('t1').innerHTML = dataArray[ind].temp;
-                document.getElementById('l1').innerHTML = dataArray[ind].sg;
+                document.getElementById('sg1').innerHTML = dataArray[ind].sg;
 
                 if (dataArray.length <= 1) return;
 
