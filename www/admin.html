@@ -9,22 +9,138 @@
     <body class="w3-white" onload="init()">
         <div class="w3-bar w3-margin-right w3-light-blue">
             <span class="w3-bar-item w3-left w3-xlarge">Dave's Brew Admin</span>
-            <button class="w3-button w3-bar-item w3-center" id='batch'>Start Batch</button>
-            <button class="w3-button w3-bar-item w3-right w3-small" onclick="window.location.href = 'index.html?date='+new Date().getTime()">View Batch</button>
+            <button class="w3-button w3-bar-item w3-right w3-small" onclick="window.location.href = 'index.html?date=' + new Date().getTime()">View Batch</button>
         </div>
-        <div class="w3-row w3-margin">
-            <div class="w3-col m2">
-                <span>Brew Name:</span>
-            </div>
-            <div class="w3-m5">
-                <div id="brewname" contenteditable="true">Batch Name</div>
-            </div>
-            <div class='w3-rest'></div>
+        <div class="w3-col m2">
+            <ul class="w3-ul w3-left-align" id="BrewList" style="width: 100%">
+                <li class="w3-hover-pale-blue" id="0" onclick="selectBrew('',0)">No Brews</li>
+            </ul>
         </div>
-        
+        <div class="w3-rest">
+            <div class="w3-col m7">
+                <div class="w3-row w3-margin">
+                    <div class="w3-col m3 w3-white">
+                        <span>Brew Name:</span>
+                    </div>
+                    <div class="w3-rest">
+                        <div id="brewname" contenteditable="true" class='w3-border'>Batch Name</div>
+                    </div>
+                </div>
+                <div class="w3-row w3-margin">
+                    <div class="w3-col m3 w3-white">
+                        <span>Brew Type:</span>
+                    </div>
+                    <div class="w3-rest">
+                        <div id="type" contenteditable="true" class='w3-border'>Pale Ale</div>
+                    </div>
+                </div>
+                <div class="w3-row w3-margin">
+                    <div class="w3-col m3 w3-white">
+                        <span>Grain:</span>
+                    </div>
+                    <div class="w3-rest">
+                        <div id="grain" contenteditable="true" class='w3-border'>Pale Ale Malt (4.5Kg)</div>
+                    </div>
+                </div>
+                <div class="w3-row w3-margin">
+                    <div class="w3-col m3 w3-white">
+                        <span>Hops:</span>
+                    </div>
+                    <div class="w3-rest">
+                        <div id="hops" contenteditable="true" class='w3-border'>Galaxy</div>
+                    </div>
+                </div>
+                <div class="w3-row w3-margin">
+                    <div class="w3-col m3 w3-white">
+                        <span>Yeast:</span>
+                    </div>
+                    <div class="w3-rest">
+                        <div id="yeast" contenteditable="true" class='w3-border'>M42 New World Strong Ale</div>
+                    </div>
+                </div>
+                <div class="w3-row w3-margin">
+                    <div class="w3-col m3 w3-white">
+                        <span>Mash Volume:</span>
+                    </div>
+                    <div class="w3-rest">
+                        <div id="mash" contenteditable="true" class='w3-border'>17.7</div>
+                    </div>
+                </div>
+                <div class="w3-row w3-margin">
+                    <div class="w3-col m3 w3-white">
+                        <span>Sparge Volume:</span>
+                    </div>
+                    <div class="w3-rest">
+                        <div id="sparge" contenteditable="true" class='w3-border'>14.5</div>
+                    </div>
+                </div>
+                <div class="w3-row w3-margin">
+                    <div class="w3-col m3 w3-white">
+                        <span>Fermentation Volume:</span>
+                    </div>
+                    <div class="w3-rest">
+                        <div id="ferment" contenteditable="true" class='w3-border'>23</div>
+                    </div>
+                </div>
+            </div>
+            <div class="w3-rest">
+                <p>Brewing notes</p>
+                <textarea class="w3-padding" style="height: 25vh; width: 95%"></textarea>
+            </div>
+        </div>
+
+        <div class="w3-bar">
+            <button class="w3-button w3-bar-item w3-blue w3-right w3-margin" onclick="save('update')">Update</button>
+            <button class="w3-button w3-bar-item w3-blue w3-right w3-margin" onclick="save('new')">Save As New Batch</button>
+            <button id="batch" class="w3-button w3-bar-item w3-green w3-right w3-margin" onclick="startstop()">Start Batch</button>
+        </div>
+
+
         <script>
+            var brewList;
+            
             function init() {
+                getBrewList();
+            }
+            
+            function getBrewList() {
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.onreadystatechange = function () {
+                    if (this.readyState === 4 && this.status === 200) {
+                        try {
+                            console.log(this.responseText);
+                            brewList = JSON.parse(this.responseText);
+                            for (var i=0; i<brewList.length; i++) {
+                                console.log(brewList[i]);
+                            }
+                        } catch (err) {
+                            console.log(this.responseText);
+                            console.log(err);
+                        }
+                    }
+                };
+                xmlhttp.onerror = function () {
+                    console.log("Connection to server failed");
+                };
+                xmlhttp.open("POST", "/cgi/batch.py", true);
+                xmlhttp.send("action=getList");
                 
+            }
+
+            function save(type) {
+
+            }
+
+            function startstop() {
+
+            }
+            
+            function selectBrew(name) {
+                var list = document.getElementById("BrewList").children;
+                for (var i=0; i<list.length; i++) {
+                    list[i].style="";
+                }
+                document.getElementById("0").style="background-color: rgb(155,200,255)";
             }
         </script>
     </body>
